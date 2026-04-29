@@ -1,0 +1,10 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+  base = "frontend"
+
+[[redirects]]
+  from = "/api/*"
+  to = "https://genai-chatbot-backend-gbqs.onrender.com/api/:splat"
+  status = 200
+  force = true
