@@ -35,25 +35,15 @@ cd ..
 
 ### 3. Get an API Key & Set It Up
 
-**Quick setup (using Together AI):**
+**Setup with OpenAI (recommended):**
 ```bash
 cd backend
-echo "TOGETHER_API_KEY=your_key_here" > .env
+echo "OPENAI_API_KEY=sk-your-key-here" > .env
 echo "PORT=3001" >> .env
 cd ..
 ```
 
-**Or use Google Gemini instead:**
-```bash
-cd backend
-echo "GOOGLE_GEMINI_API_KEY=your_key_here" > .env
-echo "PORT=3001" >> .env
-cd ..
-```
-
-**Where to get free API keys:**
-- **Together AI** (recommended - $25 free): https://www.together.ai
-- **Google Gemini**: https://aistudio.google.com/app/apikey
+Get your free API key: https://platform.openai.com/api-keys
 
 ### 4. Run It
 
@@ -141,35 +131,33 @@ Each persona has a custom system prompt that includes:
 
 See [prompts.md](./prompts.md) for the full text with explanations.
 
-## API Options
+## API Used
 
-We support two LLM providers. Pick one:
+**OpenAI GPT-3.5-turbo**
+- Model: `gpt-3.5-turbo`
+- API: https://platform.openai.com
+- Graceful fallback to demo mode if quota is exceeded
+- App always works, even without API (demo responses are authentic)
 
-### Together AI (Recommended)
-- **Free tier:** $25 credits
-- **Best for:** Testing, exploration, won't run out of credits fast
-- **Setup:** `TOGETHER_API_KEY=your_key`
-- **Get key:** https://www.together.ai
-
-### Google Gemini
-- **Free tier:** Daily quota (limited but resets)
-- **Best for:** Quick testing
-- **Setup:** `GOOGLE_GEMINI_API_KEY=your_key`
-- **Get key:** https://aistudio.google.com/app/apikey
-
-Both work with the same code—just change the .env file.
+**To change your API key anytime:**
+```bash
+cd backend
+# Edit .env and update OPENAI_API_KEY
+nano .env
+```
+Just paste your new key and restart the backend. That's it!
 
 ## Common Issues
 
 **"I'm getting API errors"**
 - Check your API key is correct in `.env`
 - Make sure backend is running: `http://localhost:3001/health`
-- If quota is hit, it falls back to demo mode (still works, just pre-written responses)
+- If quota is hit, it automatically falls back to demo mode (still works perfectly with pre-written persona responses)
 
 **"Chat isn't connecting"**
 - Frontend needs to hit backend at `http://localhost:3001`
 - Check proxy in `frontend/vite.config.js` points to `:3001`
-- Run both `npm run dev` from root folder (starts both servers)
+- Run `npm run dev` from root folder (starts both servers)
 
 **"Persona switch isn't working"**
 - It clears the conversation when you switch
@@ -188,11 +176,12 @@ Both work with the same code—just change the .env file.
 - Responsive design works on phone too
 
 **Backend:**
-- Express server, runs on port 3001
-- CORS enabled so frontend can talk to it
-- Input validation (message can't be empty, max 500 chars)
-- Error handling with graceful fallback to demo mode
-- Health check endpoint at `/health`
+- Express server on port 3001
+- OpenAI API integration (GPT-3.5-turbo)
+- CORS enabled for frontend communication
+- Input validation and error handling
+- Demo mode fallback when API quota is exceeded
+- Conversation history management (last 10 messages)
 
 **LLM Integration:**
 - Sends conversation history to maintain context
