@@ -18,9 +18,10 @@ app.use((req, res, next) => {
   next();
 });
 
-// Initialize OpenAI
+// Initialize OpenAI client pointing to OpenRouter API
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
+  baseURL: 'https://openrouter.ai/api/v1'
 });
 
 // Demo mode responses for testing without API quota
@@ -210,9 +211,9 @@ app.post('/api/chat', async (req, res) => {
         { role: 'user', content: userMessage }
       ];
 
-      // Call OpenAI API
+      // Call OpenRouter API
       const response = await openai.chat.completions.create({
-        model: 'gpt-3.5-turbo',
+        model: 'openai/gpt-3.5-turbo',
         messages: messages,
         max_tokens: 500,
         temperature: 0.7,
